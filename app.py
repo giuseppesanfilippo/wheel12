@@ -6,8 +6,11 @@ import streamlit as st
 
 st.set_page_config(page_title="Ruota della fortuna", page_icon="🎡", layout="centered")
 
-COLORS = ["#2563EB"] * 6 + ["#16A34A"] * 4 + ["#DC2626"] * 2
-LABELS = ["BLU"] * 6 + ["VERDE"] * 4 + ["ROSSO"] * 2
+# Sequenza della ruota di riferimento, dal settore 1 in senso orario.
+COLORS = ["#DC2626", "#2563EB", "#16A34A", "#2563EB", "#16A34A", "#2563EB",
+          "#DC2626", "#2563EB", "#16A34A", "#2563EB", "#16A34A", "#2563EB"]
+LABELS = ["ROSSO", "BLU", "VERDE", "BLU", "VERDE", "BLU",
+          "ROSSO", "BLU", "VERDE", "BLU", "VERDE", "BLU"]
 N = len(COLORS)
 
 
