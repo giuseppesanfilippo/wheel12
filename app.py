@@ -6,8 +6,8 @@ import streamlit as st
 
 st.set_page_config(page_title="Ruota della fortuna", page_icon="🎡", layout="centered")
 
-COLORS = ["#2563EB"] * 3 + ["#16A34A"] * 2 + ["#DC2626"] + ["#F4B942"] * 4
-LABELS = ["BLU"] * 3 + ["VERDE"] * 2 + ["ROSSO"] + ["ORO"] * 4
+COLORS = ["#2563EB"] * 6 + ["#16A34A"] * 4 + ["#DC2626"] * 2
+LABELS = ["BLU"] * 6 + ["VERDE"] * 4 + ["ROSSO"] * 2
 N = len(COLORS)
 
 
@@ -38,7 +38,7 @@ def wheel_svg(rotation):
             f'<text x="{tx:.1f}" y="{ty:.1f}" transform="rotate({(start + end) / 2} {tx:.1f} {ty:.1f})" class="label">{LABELS[i]}</text>'
         )
     return f'''<div class="wheel-wrap"><div class="pointer"></div><div class="wheel" style="transform:rotate({rotation}deg)">
-    <svg viewBox="0 0 400 400" role="img" aria-label="Ruota con dieci settori">{''.join(parts)}
+    <svg viewBox="0 0 400 400" role="img" aria-label="Ruota con dodici settori">{''.join(parts)}
       <circle cx="200" cy="200" r="177" fill="none" stroke="#fff" stroke-width="8"/>
       <circle cx="200" cy="200" r="29" fill="#172033" stroke="#fff" stroke-width="6"/>
       <circle cx="200" cy="200" r="8" fill="#F4B942"/>
@@ -81,7 +81,7 @@ if st.button("GIRA LA RUOTA  ✦"):
     st.session_state.result = LABELS[winner]
 
 st.markdown(wheel_svg(st.session_state.rotation), unsafe_allow_html=True)
-st.markdown('''<div class="legend"><span><i class="dot" style="background:#2563EB"></i>3 blu</span><span><i class="dot" style="background:#16A34A"></i>2 verdi</span><span><i class="dot" style="background:#DC2626"></i>1 rosso</span><span><i class="dot" style="background:#F4B942"></i>4 oro</span></div>''', unsafe_allow_html=True)
+st.markdown('''<div class="legend"><span><i class="dot" style="background:#2563EB"></i>6 blu</span><span><i class="dot" style="background:#16A34A"></i>4 verdi</span><span><i class="dot" style="background:#DC2626"></i>2 rossi</span></div>''', unsafe_allow_html=True)
 
 if st.session_state.result:
     st.markdown(f'<div class="result">Hai estratto<strong>{st.session_state.result}</strong></div>', unsafe_allow_html=True)
