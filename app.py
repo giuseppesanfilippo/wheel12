@@ -56,7 +56,7 @@ st.markdown("""
 h1 { text-align:center; letter-spacing:-1px; font-weight:800; }
 .subtitle { text-align:center; color:#aab7cc; margin:-8px 0 20px; }
 .wheel-wrap { width:min(82vw, 520px); aspect-ratio:1; margin:14px auto 26px; position:relative; filter:drop-shadow(0 18px 24px rgba(0,0,0,.38)); }
-.wheel { width:100%; height:100%; transition:transform 4.2s cubic-bezier(.12,.76,.18,1); }
+.wheel { width:100%; height:100%; transform-origin:50% 50%; will-change:transform; transition:transform 6.8s cubic-bezier(.08,.72,.10,1); }
 .wheel svg { width:100%; height:100%; display:block; }
 .label { fill:#fff; font:800 12px Manrope, sans-serif; text-anchor:middle; dominant-baseline:middle; letter-spacing:1px; }
 .pointer { position:absolute; z-index:2; left:50%; top:-9px; transform:translateX(-50%); width:0; height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-top:40px solid #f8fafc; filter:drop-shadow(0 3px 3px rgba(0,0,0,.45)); }
@@ -91,7 +91,8 @@ if spin:
     winner = random.randrange(N)
     # Il centro del settore vincente deve arrivare sotto il puntatore in alto.
     target = 360 - (winner * 360 / N + 180 / N)
-    st.session_state.rotation += 360 * random.randint(5, 8) + target
+    # Molti giri veloci all'inizio e una frenata lunga e progressiva.
+    st.session_state.rotation += 360 * random.randint(7, 10) + target
     st.session_state.result = LABELS[winner]
 
 st.markdown(wheel_svg(st.session_state.rotation), unsafe_allow_html=True)
