@@ -2,6 +2,7 @@ import math
 import random
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 st.set_page_config(page_title="Ruota della fortuna", page_icon="🎡", layout="centered")
@@ -40,7 +41,7 @@ def wheel_svg(rotation):
             f'<path d="{sector_path(cx, cy, radius, start, end)}" fill="{color}" stroke="#fff" stroke-width="3"/>'
             f'<text x="{tx:.1f}" y="{ty:.1f}" transform="rotate({(start + end) / 2} {tx:.1f} {ty:.1f})" class="label">{LABELS[i]}</text>'
         )
-    return f'''<div class="wheel-wrap"><div class="pointer"></div><div class="wheel" style="transform:rotate({rotation}deg)">
+    return f'''<div class="wheel-wrap"><div class="side-fin left"></div><div class="side-fin right"></div><div class="pointer"></div><div class="wheel" style="transform:rotate({rotation}deg)">
     <svg viewBox="0 0 400 400" role="img" aria-label="Ruota con dodici settori">{''.join(parts)}
       <circle cx="200" cy="200" r="177" fill="none" stroke="#fff" stroke-width="8"/>
       <circle cx="200" cy="200" r="29" fill="#172033" stroke="#fff" stroke-width="6"/>
@@ -56,6 +57,12 @@ st.markdown("""
 h1 { text-align:center; letter-spacing:-1px; font-weight:800; }
 .subtitle { text-align:center; color:#aab7cc; margin:-8px 0 20px; }
 .wheel-wrap { width:min(82vw, 520px); aspect-ratio:1; margin:14px auto 26px; position:relative; filter:drop-shadow(0 18px 24px rgba(0,0,0,.38)); }
+.side-fin { position:absolute; z-index:0; top:29%; width:14%; height:42%; border:3px solid #94a3b8; background:linear-gradient(90deg,#334155,#cbd5e1 45%,#64748b); box-shadow:0 5px 12px rgba(0,0,0,.35); }
+.side-fin.left { left:-7%; clip-path:polygon(100% 0,100% 100%,0 82%,25% 50%,0 18%); border-radius:12px 0 0 12px; }
+.side-fin.right { right:-7%; clip-path:polygon(0 0,100% 18%,75% 50%,100% 82%,0 100%); border-radius:0 12px 12px 0; }
+.side-fin:after { content:""; position:absolute; top:18%; bottom:18%; width:4px; background:#e2e8f0; opacity:.8; }
+.side-fin.left:after { right:16%; }
+.side-fin.right:after { left:16%; }
 .wheel { width:100%; height:100%; transform-origin:50% 50%; will-change:transform; transition:transform 6.8s cubic-bezier(.08,.72,.10,1); }
 .wheel svg { width:100%; height:100%; display:block; }
 .label { fill:#fff; font:800 12px Manrope, sans-serif; text-anchor:middle; dominant-baseline:middle; letter-spacing:1px; }
@@ -94,6 +101,17 @@ if spin:
     # Molti giri veloci all'inizio e una frenata lunga e progressiva.
     st.session_state.rotation += 360 * random.randint(7, 10) + target
     st.session_state.result = LABELS[winner]
+    components.html("""<script>
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (C) { const c = new C(); const t = c.currentTime;
+      [0, .10, .22, .36, .52, .70, .92, 1.16].forEach((d, i) => {
+        const o=c.createOscillator(), g=c.createGain(); o.type='triangle';
+        o.frequency.value=240 + i*34; g.gain.setValueAtTime(.0001,t+d);
+        g.gain.exponentialRampToValueAtTime(.07,t+d+.012); g.gain.exponentialRampToValueAtTime(.0001,t+d+.075);
+        o.connect(g).connect(c.destination); o.start(t+d); o.stop(t+d+.09);
+      }); setTimeout(()=>c.close(), 1600);
+    }
+    </script>""", height=0)
 
 st.markdown(wheel_svg(st.session_state.rotation), unsafe_allow_html=True)
 st.markdown('''<div class="legend"><span><i class="dot" style="background:#2563EB"></i>6 blu</span><span><i class="dot" style="background:#16A34A"></i>4 verdi</span><span><i class="dot" style="background:#DC2626"></i>2 rossi</span></div>''', unsafe_allow_html=True)
