@@ -41,6 +41,12 @@ def wheel_svg(rotation):
             f'<path d="{sector_path(cx, cy, radius, start, end)}" fill="{color}" stroke="#fff" stroke-width="3"/>'
             f'<text x="{tx:.1f}" y="{ty:.1f}" transform="rotate({(start + end) / 2} {tx:.1f} {ty:.1f})" class="label">{LABELS[i]}</text>'
         )
+    # Piolini metallici sui bordi dei settori, come in una ruota fisica.
+    for i in range(N):
+        peg_angle = math.radians(i * angle - 90)
+        px = cx + 177 * math.cos(peg_angle)
+        py = cy + 177 * math.sin(peg_angle)
+        parts.append(f'<circle cx="{px:.2f}" cy="{py:.2f}" r="6.5" fill="#cbd5e1" stroke="#334155" stroke-width="2"/>')
     return f'''<div class="wheel-wrap"><div class="side-fin left"></div><div class="side-fin right"></div><div class="pointer"></div><div class="wheel" style="transform:rotate({rotation}deg)">
     <svg viewBox="0 0 400 400" role="img" aria-label="Ruota con dodici settori">{''.join(parts)}
       <circle cx="200" cy="200" r="177" fill="none" stroke="#fff" stroke-width="8"/>
@@ -66,7 +72,8 @@ h1 { text-align:center; letter-spacing:-1px; font-weight:800; }
 .wheel { width:100%; height:100%; transform-origin:50% 50%; will-change:transform; transition:transform 6.8s cubic-bezier(.08,.72,.10,1); }
 .wheel svg { width:100%; height:100%; display:block; }
 .label { fill:#fff; font:800 12px Manrope, sans-serif; text-anchor:middle; dominant-baseline:middle; letter-spacing:1px; }
-.pointer { position:absolute; z-index:2; left:50%; top:-9px; transform:translateX(-50%); width:0; height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-top:40px solid #f8fafc; filter:drop-shadow(0 3px 3px rgba(0,0,0,.45)); }
+.pointer { position:absolute; z-index:2; left:50%; top:-9px; transform:translateX(-50%); width:0; height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-top:40px solid #f8fafc; filter:drop-shadow(0 3px 3px rgba(0,0,0,.45)); transform-origin:50% 0; animation:pointerFlex 1.35s ease-in-out infinite; }
+@keyframes pointerFlex { 0%,100% { transform:translateX(-50%) rotate(0deg); } 35% { transform:translateX(-50%) rotate(-3deg); } 70% { transform:translateX(-50%) rotate(2.5deg); } }
 .legend { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; color:#cbd5e1; font-size:13px; margin:4px 0 20px; }
 .dot { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px; vertical-align:-1px; }
 .stButton button { width:100%; border:0; border-radius:14px; padding:13px 16px; background:linear-gradient(135deg,#f59e0b,#f97316); color:#111827; font-size:18px; font-weight:800; box-shadow:0 8px 20px rgba(249,115,22,.25); }
