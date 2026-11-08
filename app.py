@@ -76,7 +76,18 @@ if "rotation" not in st.session_state:
     st.session_state.rotation = 0
     st.session_state.result = None
 
-if st.button("GIRA LA RUOTA  ✦"):
+spin_col, reset_col = st.columns([3, 1])
+with spin_col:
+    spin = st.button("GIRA LA RUOTA  ✦", use_container_width=True)
+with reset_col:
+    reset = st.button("RESET", use_container_width=True)
+
+if reset:
+    st.session_state.rotation = 0
+    st.session_state.result = None
+    st.rerun()
+
+if spin:
     winner = random.randrange(N)
     # Il centro del settore vincente deve arrivare sotto il puntatore in alto.
     target = 360 - (winner * 360 / N + 180 / N)
